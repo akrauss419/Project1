@@ -54,3 +54,8 @@ function init() {
     loss = null;
     render();
 }
+
+function render() {
+    renderMinefield();
+    renderMessage();
+}

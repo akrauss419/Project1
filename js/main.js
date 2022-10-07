@@ -12,8 +12,10 @@ let loss;
 
 
 /*-------- cached elements --------*/
-
-
+const markerBank = document.getElementById('marker-bank');
+const statusMessage = document.querySelector('h1');
+const resetBtn = document.querySelector('button');
+const timer = document.getElementById('timer');
 
 
 /*-------- event listeners --------*/
@@ -48,8 +50,7 @@ function init() {
         6: 'teal',
         7: 'black',
         8: 'white',
-    }
-
+    };
     win = null;
     loss = null;
     render();

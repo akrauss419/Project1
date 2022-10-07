@@ -15,7 +15,9 @@ h1 {
     margin-bottom: 0;
 }
 
-
+h2 {
+    margin: 0;
+}
 
 section {
     height: 7vmin;
@@ -36,8 +38,8 @@ section > div {
 }
 
 button {
-    height: 4vmin;
-    width: 4vmin;
+    height: 5vmin;
+    width: 5.5vmin;
 }
 
 main {

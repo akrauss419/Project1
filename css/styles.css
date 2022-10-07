@@ -1,0 +1,52 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+h1 {
+    margin-bottom: 0;
+}
+
+
+
+section {
+    height: 7vmin;
+    width: 50%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border: 0.3vmin solid black;
+    background-color: lightgrey;
+}
+
+section > div {
+    height: 4vmin;
+    width: 7vmin;
+    outline: 0.5vmin solid black;
+    margin: 0 1vmin;
+}
+
+button {
+    height: 4vmin;
+    width: 4vmin;
+}
+
+main {
+    display: grid;
+    grid-template-columns: repeat(10, 5vmin);
+    grid-template-rows: repeat(10, 5vmin);
+    background-color: lightgrey;
+}
+
+main > div {
+    outline: 0.3vmin solid black;
+}

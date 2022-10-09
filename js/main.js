@@ -19,8 +19,9 @@ const timer = document.getElementById('timer');
 
 
 /*-------- event listeners --------*/
-
-
+document.getElementById('minefield').addEventListener('click', clearSquare);
+document.getElementById('minefield').addEventListener('contextmenu', function(e) {e.preventDefault();});
+resetBtn.addEventListener('click', init);
 
 
 /*-------- functions --------*/
@@ -56,7 +57,29 @@ function init() {
     render();
 }
 
+function clearSquare() {
+
+    render();
+}
+
 function render() {
     renderMinefield();
     renderMessage();
+}
+
+function renderMinefield() {
+    let minePlacement = document.getElementById('minefield');
+    for (let i = 0; i < 10; i++) {
+        const mine = document.createElement('div');
+        mine.className = 'mine' + i;
+        minefield.appendChild(mine);
+    }
+    let placedMines = [];
+    while (placedMines.length < 10) {
+        let randomIndex = parseInt(10 * Math.random());
+        if (placedMines.indexOf(randomIndex) === -1) {
+            placedMines.push(randomIndex);
+            document.getElementById('mine' + randomIndex).style.backgroundColor = 'red';
+        }
+    }
 }

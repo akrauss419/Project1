@@ -12,6 +12,9 @@ body {
 }
 
 h1 {
+    font-family: 'Gemunu Libre', sans-serif;
+    font-size: 40px;
+    margin-top: 5vmin;
     margin-bottom: 0;
 }
 
@@ -28,6 +31,7 @@ section {
     align-items: center;
     border: 0.3vmin solid black;
     background-color: lightgrey;
+    margin-top: 5vmin;
 }
 
 section > div {
@@ -35,6 +39,13 @@ section > div {
     width: 7vmin;
     outline: 0.5vmin solid black;
     margin: 0 1vmin;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+p {
+    font-size: 20px;
 }
 
 button {
@@ -47,8 +58,13 @@ main {
     grid-template-columns: repeat(10, 5vmin);
     grid-template-rows: repeat(10, 5vmin);
     background-color: lightgrey;
+    margin-bottom: 12vmin;
 }
 
 main > div {
     outline: 0.3vmin solid black;
+}
+
+main > div:hover {
+    outline: 1vmin solid black;
 }

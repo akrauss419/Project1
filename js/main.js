@@ -39,8 +39,8 @@ const minefieldCells = [...document.querySelectorAll('#minefield > div')];
 
 
 /*-------- event listeners --------*/
-document.getElementById('minefield').addEventListener('click', clearSquare);
-document.getElementById('minefield').addEventListener('contextmenu', function(e) {e.preventDefault();});
+document.getElementById('minefield').addEventListener('click', handleLeftClick);
+document.getElementById('minefield').addEventListener('contextmenu', handleRightClick);
 resetBtn.addEventListener('click', init);
 
 
@@ -67,37 +67,43 @@ function init() {
         for (let c = 0; c < columns; c++) {
             let cell = {isMine: false, adjMineCount: 0, revealed: false, click: false, markerStatus: false,};
             minefield[r][c] = cell;
-            let cellDiv = document.getElementById(`c${c}r${r}`);
-            cellDiv.style.backgroundColor = 'lightgrey';
-            cellDiv.innerText = '';
-            cellDiv.style.border = '2px solid black';
-            console.log(cellDiv);
         }
     };
+    setMinefield();
     render();
 }
 
 
-function clearSquare(evt) {
-    const colIdx = minefieldCells.indexOf(evt.target);
-    if (colIdx === -1) return;
-    console.log(colIdx);
+function handleLeftClick(evt) {
+    if ( evt.target.tagName !== 'DIV') return;
+    const square = minefield[parseInt(evt.target.id[1])][parseInt(evt.target.id[3])];
+    console.log(clearedSquare);
+    clearedSquare.click = true;
+    if (clearedSquare.isMine = false) {
+        // reveal blank squares and/or adjMineCount
+    } else {
+        // isMine = true and the game is over. Player loses
+    };
+    // winner = checkWinner();
     render();
 }
 
-function placeMarker(evt) {
-    const colIdx = minefieldCells.indexOf(evt.target);
-
+function handleRightClick(evt) {
+    evt.preventDefault();
+    if ( evt.target.tagName !== 'DIV') return;
+    const square = minefield[parseInt(evt.target.id[1])][parseInt(evt.target.id[3])];
+    square.markerStatus = true;
+    // winner = checkWinner();
     render();
 }
 
 function render() {
-    renderMinefield();
+    renderBoard();
     // renderMessage();
     // renderTimer();
 }
 
-function renderMinefield() {
+function setMinefield() {
     let minesRemaining = mines;
     while (minesRemaining > 0) {
         let rowIdx = Math.floor(Math.random() * rows);
@@ -107,6 +113,23 @@ function renderMinefield() {
             minefield[rowIdx][colIdx].isMine = true;
         }
     }
+}
+
+function renderBoard() {
+    minefield.forEach(function(colArr, colIdx) {
+        colArr.forEach(function(cell, rowIdx) {
+            const cellId = `c${colIdx}r${rowIdx}`;
+            if (minefield[colIdx][rowIdx].isMine === true) {
+                document.getElementById(cellId).style.backgroundColor = 'red';
+            } else {
+                document.getElementById(cellId).style.backgroundColor = 'lightgrey';
+                // cellDiv.style.border = '2px solid black';
+            }
+            if (minefield[colIdx][rowIdx].markerStatus === true) {
+                document.getElementById(cellId).style.backgroundColor = 'purple';
+            }
+        });
+    });
 }
 
 // function renderMessage() {

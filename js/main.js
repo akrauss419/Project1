@@ -63,8 +63,8 @@ function init() {
     };
     win = null;
     loss = null;
-    for (let r = 0; r < rows.length; r++) {
-        for (let c = 0; c < columns.length; c++) {
+    for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < columns; c++) {
             let cell = {isMine: false, adjMineCount: 0, revealed: false, click: false, markerStatus: false,};
             minefield[r][c] = cell;
             let cellDiv = document.getElementById(`c${c}r${r}`);
@@ -76,6 +76,7 @@ function init() {
     };
     render();
 }
+
 
 function clearSquare(evt) {
     const colIdx = minefieldCells.indexOf(evt.target);
@@ -92,8 +93,8 @@ function placeMarker(evt) {
 
 function render() {
     renderMinefield();
-    renderMessage();
-    renderTimer();
+    // renderMessage();
+    // renderTimer();
 }
 
 function renderMinefield() {

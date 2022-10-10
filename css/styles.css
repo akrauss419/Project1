@@ -31,14 +31,13 @@ h2 {
 
 section {
     height: 7vmin;
-    width: 50%;
+    width: 25%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     border: 0.3vmin solid black;
     background-color: lightgrey;
-    margin-top: 5vmin;
 }
 
 section > div {

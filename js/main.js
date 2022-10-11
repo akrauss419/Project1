@@ -77,7 +77,9 @@ function init() {
 
 function handleLeftClick(evt) {
     if ( evt.target.tagName !== 'DIV') return;
-    const square = minefield[parseInt(evt.target.id[1])][parseInt(evt.target.id[3])];
+    let colIdx = parseInt(evt.target.id[1]);
+    let rowIdx = parseInt(evt.target.id[3]);
+    const square = minefield[colIdx][rowIdx];
     square.click = true;
     // if (square.isMine = false) {
         // reveal blank squares and/or adjMineCount
@@ -86,6 +88,7 @@ function handleLeftClick(evt) {
     // };
     // winner = checkWinner();
     // checkAdjacentMines();
+    floodSquares(colIdx, rowIdx);
     render();
 }
 
@@ -144,15 +147,38 @@ function checkAdjacentMines(colIdx, rowIdx) {
     }
 }
 
-// } else {
-    //     checkAdjacentMines(colIdx - 1, rowIdx - 1);
-    //     checkAdjacentMines(colIdx - 1, rowIdx);
-    //     checkAdjacentMines(colIdx - 1, rowIdx + 1);
-    //     checkAdjacentMines(colIdx, rowIdx - 1);
-    //     checkAdjacentMines(colIdx, rowIdx + 1);
-    //     checkAdjacentMines(colIdx + 1, rowIdx + 1);
-    //     checkAdjacentMines(colIdx + 1, rowIdx);
-    //     checkAdjacentMines(colIdx + 1, rowIdx + 1);
+function floodSquares(colIdx, rowIdx) {
+    let neighbor1 = document.getElementById(`c${colIdx - 1}r${rowIdx - 1}`);
+    let neighbor2 = document.getElementById(`c${colIdx - 1}r${rowIdx}`);
+    let neighbor3 = document.getElementById(`c${colIdx - 1}r${rowIdx + 1}`);
+    let neighbor4 = document.getElementById(`c${colIdx}r${rowIdx - 1}`);
+    let neighbor5 = document.getElementById(`c${colIdx}r${rowIdx + 1}`);
+    let neighbor6 = document.getElementById(`c${colIdx + 1}r${rowIdx + 1}`);
+    let neighbor7 = document.getElementById(`c${colIdx + 1}r${rowIdx}`);
+    let neighbor8 = document.getElementById(`c${colIdx + 1}r${rowIdx + 1}`);
+
+    let neighbors = [neighbor1, neighbor2, neighbor3, neighbor4, neighbor5, neighbor6, neighbor7, neighbor8];
+
+    neighbors.forEach(function(neighbor) {
+        if (neighbor) {
+            console.log(neighbors);
+            let neighborId = neighbor.id;
+            let neighborIdArr = neighborId.split('');
+            let neighborColIdx = parseInt(neighborIdArr[1]);
+            let neighborRowIdx = parseInt(neighborIdArr[3]);
+            let neighborCell = minefield[neighborColIdx][neighborRowIdx];
+            if (neighborCell.isMine === false) {
+                if (neighborCell.adjMineCount === 0 && neighborCell.click === false) {
+                    neighborCell.click = true;
+                    floodSquares(neighborColIdx, neighborRowIdx);
+                } else if (neighborCell.adjMineCount > 0) {
+                    neighborCell.click = true;
+                }
+            }
+        }
+    });
+    render();
+}
     
 function checkSquare(colIdx, rowIdx) {
     let count = 0;
@@ -161,7 +187,7 @@ function checkSquare(colIdx, rowIdx) {
     }
     if (minefield[colIdx][rowIdx].isMine == true) {
          count++;
-     }
+    }
     return count;
 }
 
@@ -190,6 +216,8 @@ function renderMinefield() {
             }
             if (minefield[colIdx][rowIdx].adjMineCount !== 0 && minefield[colIdx][rowIdx].click === true) {
                 document.getElementById(cellId).innerText = minefield[colIdx][rowIdx].adjMineCount;
+                document.getElementById(cellId).style.fontSize = '4vmin';
+                document.getElementById(cellId).style.textAlign = 'center';
             }
         });
     });

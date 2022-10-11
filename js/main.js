@@ -70,6 +70,7 @@ function init() {
         }
     };
     setMinefield();
+    setAdjacentMineCount();
     render();
 }
 
@@ -77,14 +78,14 @@ function init() {
 function handleLeftClick(evt) {
     if ( evt.target.tagName !== 'DIV') return;
     const square = minefield[parseInt(evt.target.id[1])][parseInt(evt.target.id[3])];
-    console.log(clearedSquare);
-    clearedSquare.click = true;
-    if (clearedSquare.isMine = false) {
+    square.click = true;
+    // if (square.isMine = false) {
         // reveal blank squares and/or adjMineCount
-    } else {
+    // } else {
         // isMine = true and the game is over. Player loses
-    };
+    // };
     // winner = checkWinner();
+    checkAdjacentMines();
     render();
 }
 
@@ -93,12 +94,17 @@ function handleRightClick(evt) {
     if ( evt.target.tagName !== 'DIV') return;
     const square = minefield[parseInt(evt.target.id[1])][parseInt(evt.target.id[3])];
     square.markerStatus = true;
+    let numOfMarkers = markers;
+    numOfMarkers--;
+    markerBank.innerText = numOfMarkers;
+    markerBank.style.color = 'red';
+    if (numOfMarkers < 0) return;
     // winner = checkWinner();
     render();
 }
 
 function render() {
-    renderBoard();
+    renderMinefield();
     // renderMessage();
     // renderTimer();
 }
@@ -115,7 +121,59 @@ function setMinefield() {
     }
 }
 
-function renderBoard() {
+function checkAdjacentMines(colIdx, rowIdx) {
+    if (rowIdx < 0 || rowIdx > (rows - 1) || colIdx < 0 || colIdx > (columns - 1)) {
+        return;
+    }
+    if (minefield[colIdx][rowIdx].click === true) {
+        return;
+    }
+    minefield[colIdx][rowIdx].click === true;
+    // squaresClicked += 1;
+    let minesFound = 0;
+    minesFound += checkSquare(colIdx - 1, rowIdx - 1);
+    minesFound += checkSquare(colIdx - 1, rowIdx);
+    minesFound += checkSquare(colIdx - 1, rowIdx + 1);
+    minesFound += checkSquare(colIdx, rowIdx - 1);
+    minesFound += checkSquare(colIdx, rowIdx + 1);
+    minesFound += checkSquare(colIdx + 1, rowIdx - 1);
+    minesFound += checkSquare(colIdx + 1, rowIdx);
+    minesFound += checkSquare(colIdx + 1, rowIdx + 1);
+    if (minesFound > 0) {
+        minefield[colIdx][rowIdx].adjMineCount = minesFound;
+    }
+}
+
+// } else {
+    //     checkAdjacentMines(colIdx - 1, rowIdx - 1);
+    //     checkAdjacentMines(colIdx - 1, rowIdx);
+    //     checkAdjacentMines(colIdx - 1, rowIdx + 1);
+    //     checkAdjacentMines(colIdx, rowIdx - 1);
+    //     checkAdjacentMines(colIdx, rowIdx + 1);
+    //     checkAdjacentMines(colIdx + 1, rowIdx + 1);
+    //     checkAdjacentMines(colIdx + 1, rowIdx);
+    //     checkAdjacentMines(colIdx + 1, rowIdx + 1);
+    
+function checkSquare(colIdx, rowIdx) {
+    let count = 0;
+    if (rowIdx < 0 || rowIdx > (rows - 1) || colIdx < 0 || colIdx > (columns - 1)) {
+        return 0;
+    }
+    if (minefield[colIdx][rowIdx].isMine == true) {
+         count++;
+     }
+    return count;
+}
+
+function setAdjacentMineCount() {
+    for (c = 0; c < columns; c++) {
+        for (r = 0; r < rows; r++) {
+            checkAdjacentMines(c, r);
+        }
+    }
+};
+
+function renderMinefield() {
     minefield.forEach(function(colArr, colIdx) {
         colArr.forEach(function(cell, rowIdx) {
             const cellId = `c${colIdx}r${rowIdx}`;
@@ -123,10 +181,12 @@ function renderBoard() {
                 document.getElementById(cellId).style.backgroundColor = 'red';
             } else {
                 document.getElementById(cellId).style.backgroundColor = 'lightgrey';
-                // cellDiv.style.border = '2px solid black';
             }
             if (minefield[colIdx][rowIdx].markerStatus === true) {
                 document.getElementById(cellId).style.backgroundColor = 'purple';
+            }
+            if (minefield[colIdx][rowIdx].adjMineCount !== 0 && minefield[colIdx][rowIdx].click === true) {
+                document.getElementById(cellId).innerText = cellId.adjMineCount;
             }
         });
     });
@@ -135,6 +195,8 @@ function renderBoard() {
 // function renderMessage() {
 //     if (winner === ) {
 //         statusMessage.innerText = "You successfully marked each mine! You win!";
+//     } else if (markerBank <= 10) {
+//         statusMessage.innerText = "10 mines to mark. No time to waste!";
 //     } else if (markerBank < 7) {
 //         statusMessage.innerText = "Great start! You still have some work to do though.";
 //     } else if (markerBank < 5) {

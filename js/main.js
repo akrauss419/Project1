@@ -85,7 +85,7 @@ function handleLeftClick(evt) {
         // isMine = true and the game is over. Player loses
     // };
     // winner = checkWinner();
-    checkAdjacentMines();
+    // checkAdjacentMines();
     render();
 }
 
@@ -185,8 +185,11 @@ function renderMinefield() {
             if (minefield[colIdx][rowIdx].markerStatus === true) {
                 document.getElementById(cellId).style.backgroundColor = 'purple';
             }
+            if (minefield[colIdx][rowIdx].click === true) {
+                document.getElementById(cellId).style.backgroundColor = 'darkgrey';
+            }
             if (minefield[colIdx][rowIdx].adjMineCount !== 0 && minefield[colIdx][rowIdx].click === true) {
-                document.getElementById(cellId).innerText = cellId.adjMineCount;
+                document.getElementById(cellId).innerText = minefield[colIdx][rowIdx].adjMineCount;
             }
         });
     });

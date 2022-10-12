@@ -21,18 +21,7 @@ const rows = 10;
 
 
 /*-------- state variables --------*/
-let minefield = [
-    [null, null, null, null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null, null, null, null],
-];
+let minefield;
 let mines;
 let markers;
 let cell;
@@ -43,7 +32,7 @@ let loss;
 
 /*-------- cached elements --------*/
 const markerBank = document.getElementById('marker-bank');
-const statusMessage = document.querySelector('h2');
+const statusMessage = document.getElementById('message');
 const resetBtn = document.querySelector('button');
 const gameTimer = document.getElementById('timer');
 const minefieldCells = [...document.querySelectorAll('#minefield > div')];
@@ -59,17 +48,36 @@ resetBtn.addEventListener('click', init);
 init();
 
 function init() {
+    minefield = [
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null, null, null],
+    ];
     mines = 10;
     markers = 10;
     timer = 0;
     win = false;
     loss = false;
-    for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < columns; c++) {
-            let cell = {isMine: false, adjMineCount: 0, revealed: false, click: false, markerStatus: false,};
-            minefield[r][c] = cell;
-        }
-    };
+    minefield = minefield.map(function(array) {
+        let newArr = array.map(function(ele) {
+            let newEl = {isMine: false, adjMineCount: 0, revealed: false, click: false, markerStatus: false,};
+            return newEl;
+        });
+        return newArr;
+    })
+    // for (let r = 0; r < rows; r++) {
+    //     for (let c = 0; c < columns; c++) {
+    //         let cell = {isMine: false, adjMineCount: 0, revealed: false, click: false, markerStatus: false,};
+    //         minefield[r][c] = cell;
+    //     }
+    // };
     setMinefield();
     setAdjacentMineCount();
     gameClock();
@@ -84,8 +92,6 @@ function handleLeftClick(evt) {
     square.click = true;
     if (square.click === true && square.isMine === true) {
         loss = true;
-        renderMessage();
-        revealMines();
     }
     floodSquares(colIdx, rowIdx);
     checkWin();
@@ -105,10 +111,6 @@ function handleRightClick(evt) {
         square.markerStatus = false;
         markers++;
     }
-    markerBank.innerText = markers;
-    markerBank.style.color = 'red';
-    markerBank.style.fontSize = '28px';
-    if (markers < 0) return;
     checkWin();
     render();
 }
@@ -131,11 +133,11 @@ function checkWin() {
 function setMinefield() {
     let minesRemaining = mines;
     while (minesRemaining > 0) {
-        let rowIdx = Math.floor(Math.random() * rows);
-        let colIdx = Math.floor(Math.random() * columns);
-        if (minefield[rowIdx][colIdx].isMine == false) {
+        let colIdx = Math.floor(Math.random() * rows);
+        let rowIdx = Math.floor(Math.random() * columns);
+        if (minefield[colIdx][rowIdx].isMine === false) {
             minesRemaining--;
-            minefield[rowIdx][colIdx].isMine = true;
+            minefield[colIdx][rowIdx].isMine = true;
         }
     }
 }
@@ -146,7 +148,6 @@ function revealMines() {
             const cellId = `c${colIdx}r${rowIdx}`;
             if (minefield[colIdx][rowIdx].isMine === true) {
                 document.getElementById(cellId).style.backgroundColor = 'red';
-                document.getElementById(cellId).style.outline = '0.5vmin solid black';
             }
         });
     });
@@ -154,6 +155,7 @@ function revealMines() {
         
 
 function checkAdjacentMines(colIdx, rowIdx) {
+    console.log('dog');
     if (rowIdx < 0 || rowIdx > (rows - 1) || colIdx < 0 || colIdx > (columns - 1)) {
         return;
     }
@@ -190,7 +192,6 @@ function floodSquares(colIdx, rowIdx) {
 
     neighbors.forEach(function(neighbor) {
         if (neighbor) {
-            console.log(neighbors);
             let neighborId = neighbor.id;
             let neighborIdArr = neighborId.split('');
             let neighborColIdx = parseInt(neighborIdArr[1]);
@@ -249,17 +250,19 @@ function gameClock() {
 function render() {
     renderMinefield();
     renderMessage();
+    if (loss === true) revealMines();
 }
 
 function renderMinefield() {
     minefield.forEach(function(colArr, colIdx) {
         colArr.forEach(function(cell, rowIdx) {
             const cellId = `c${colIdx}r${rowIdx}`;
-            // if (minefield[colIdx][rowIdx].isMine === true) {
-            //     document.getElementById(cellId).style.backgroundColor = 'red';
-            // } else {
-            //     document.getElementById(cellId).style.backgroundColor = 'lightgrey';
-            // }
+            if (minefield[colIdx][rowIdx].click === false) document.getElementById(cellId).innerHTML = '';
+            if (minefield[colIdx][rowIdx].isMine === true) {
+                document.getElementById(cellId).style.backgroundColor = 'lightgrey';
+            } else {
+                document.getElementById(cellId).style.backgroundColor = 'lightgrey';
+            }
             if (minefield[colIdx][rowIdx].markerStatus === true) {
                 document.getElementById(cellId).style.backgroundColor = 'purple';
             }
@@ -273,20 +276,24 @@ function renderMinefield() {
             }
         });
     });
+    markerBank.innerText = markers;
+    markerBank.style.color = 'red';
+    markerBank.style.fontSize = '28px';
+    if (markers < 0) return;
 }
 
 function renderMessage() {
-    if (markers <= 10) {
-        statusMessage.innerText = "10 mines to mark. No time to waste!";
-    } else if (markers <= 7) {
-        statusMessage.innerText = "Great start! You still have some work to do though.";
-    } else if (markers <= 5) {
-        statusMessage.innerText = "Halfway there! Keep up the good work!";
-    } else if (markers <= 3) {
-        statusMessage.innerText = "You're so close! Time to finish strong!";
-    } else if (win = true) {
-        statusMessage.innerText = "You successfully marked each mine! You win! Just keep swimming!";
-    } else if (loss = true) {
-        statusMessage.innerText = "You detonated a mine! Sorry, you lose.";
+    if (markers === 10) {
+        statusMessage.innerHTML = "10 mines to mark. No time to waste!";
+    } else if (markers >= 7) {
+        statusMessage.innerHTML = "Great start! You still have some work to do though.";
+    } else if (markers >= 5) {
+        statusMessage.innerHTML = "Halfway there! Keep up the good work!";
+    } else if (markers >= 3) {
+        statusMessage.innerHTML = "You're so close! Time to finish strong!";
+    } else if (win === true) {
+        statusMessage.innerHTML = "You successfully marked each mine! You win! Just keep swimming!";
+    } else if (loss === true) {
+        statusMessage.innerHTML = "You detonated a mine! Sorry, you lose.";
     }
 }

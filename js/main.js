@@ -4,6 +4,17 @@ const GAME_PIECES = {
     marker: "url('https://inotgo.com/imagesLocal/202108/03/20210803020506364t_4.png')",
 }
 
+const NUMBER_HINTS = {
+    1: 'blue',
+    2: 'green',
+    3: 'red',
+    4: 'purple',
+    5: 'maroon',
+    6: 'teal',
+    7: 'black',
+    8: 'white',
+};
+
 const columns = 10;
 
 const rows = 10;
@@ -24,7 +35,6 @@ let minefield = [
 ];
 let mines;
 let markers;
-let numberHints;
 let cell;
 let timer;
 let win;
@@ -51,17 +61,6 @@ init();
 function init() {
     mines = 10;
     markers = 10;
-    numberHints = {
-        0: 'grey',
-        1: 'blue',
-        2: 'green',
-        3: 'red',
-        4: 'purple',
-        5: 'maroon',
-        6: 'teal',
-        7: 'black',
-        8: 'white',
-    };
     timer = 0;
     win = null;
     loss = null;
@@ -91,6 +90,7 @@ function handleLeftClick(evt) {
     // winner = checkWinner();
     // checkAdjacentMines();
     floodSquares(colIdx, rowIdx);
+    checkWin();
     render();
 }
 
@@ -111,8 +111,24 @@ function handleRightClick(evt) {
     markerBank.style.color = 'red';
     markerBank.style.fontSize = '28px';
     if (markers < 0) return;
-    // winner = checkWinner();
+    checkWin();
     render();
+}
+
+function checkWin() {
+    minefield.forEach(function(colArr, colIdx) {
+        colArr.forEach(function(cell, rowIdx) {
+            const cellId = `c${colIdx}r${rowIdx}`;
+            if ([minefield[colIdx][rowIdx].isMine === true && minefield[colIdx][rowIdx].markerStatus === true] * 10) {
+                winner = true;
+            } else {
+                return null;
+            }
+            if (minefield[colIdx][rowIdx].isMine === true && minefield[colIdx][rowIdx].click === true) {
+                winner = false;
+            }
+        });
+    });    
 }
 
 function setMinefield() {
@@ -176,6 +192,8 @@ function floodSquares(colIdx, rowIdx) {
                     floodSquares(neighborColIdx, neighborRowIdx);
                 } else if (neighborCell.adjMineCount > 0) {
                     neighborCell.click = true;
+                } else if (neighborCell.isMine === true) {
+                    neighborCell.click = false;
                 }
             }
         }
@@ -219,7 +237,6 @@ setInterval(function() {
 function render() {
     renderMinefield();
     renderMessage();
-    // renderTimer();
 }
 
 function renderMinefield() {
@@ -238,7 +255,7 @@ function renderMinefield() {
                 document.getElementById(cellId).style.backgroundColor = 'darkgrey';
             }
             if (minefield[colIdx][rowIdx].adjMineCount !== 0 && minefield[colIdx][rowIdx].click === true) {
-                document.getElementById(cellId).innerText = minefield[colIdx][rowIdx].adjMineCount;
+                document.getElementById(cellId).innerHTML = minefield[colIdx][rowIdx].adjMineCount;
                 document.getElementById(cellId).style.fontSize = '4vmin';
                 document.getElementById(cellId).style.textAlign = 'center';
             }
@@ -255,7 +272,7 @@ function renderMessage() {
         statusMessage.innerText = "Halfway there! Keep up the good work!";
     } else if (markers <= 3) {
         statusMessage.innerText = "You're so close! Time to finish strong!";
-    // } else if (winner === ) {
-    //     statusMessage.innerText = "You successfully marked each mine! You win!";
+    } else if (winner === true) {
+        statusMessage.innerText = "You successfully marked each mine! You win! Just keep swimming!";
     }
 }

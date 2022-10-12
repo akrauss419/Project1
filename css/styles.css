@@ -78,5 +78,5 @@ main > div {
 }
 
 main > div:hover {
-    outline: 1vmin solid black;
+    outline: 0.8vmin solid black;
 }

@@ -26,15 +26,16 @@ let mines;
 let markers;
 let numberHints;
 let cell;
+let timer;
 let win;
 let loss;
 
 
 /*-------- cached elements --------*/
 const markerBank = document.getElementById('marker-bank');
-const statusMessage = document.querySelector('h1');
+const statusMessage = document.querySelector('h2');
 const resetBtn = document.querySelector('button');
-const timer = document.getElementById('timer');
+const gameTimer = document.getElementById('timer');
 const minefieldCells = [...document.querySelectorAll('#minefield > div')];
 
 
@@ -61,6 +62,7 @@ function init() {
         7: 'black',
         8: 'white',
     };
+    timer = 0;
     win = null;
     loss = null;
     for (let r = 0; r < rows; r++) {
@@ -107,15 +109,10 @@ function handleRightClick(evt) {
     }
     markerBank.innerText = markers;
     markerBank.style.color = 'red';
+    markerBank.style.fontSize = '28px';
     if (markers < 0) return;
     // winner = checkWinner();
     render();
-}
-
-function render() {
-    renderMinefield();
-    // renderMessage();
-    // renderTimer();
 }
 
 function setMinefield() {
@@ -205,6 +202,26 @@ function setAdjacentMineCount() {
     }
 };
 
+setInterval(function() {
+    timer += 1;
+    if (timer < 10) {
+        gameTimer.innerText = `00${timer}`;
+    } else if (timer < 100) {
+        gameTimer.innerText = `0${timer}`;
+    } else {
+        gameTimer.innerText = timer;
+    }
+    gameTimer.style.color = 'red';
+    gameTimer.style.fontSize = '28px';
+}, 1000);
+
+
+function render() {
+    renderMinefield();
+    renderMessage();
+    // renderTimer();
+}
+
 function renderMinefield() {
     minefield.forEach(function(colArr, colIdx) {
         colArr.forEach(function(cell, rowIdx) {
@@ -229,16 +246,16 @@ function renderMinefield() {
     });
 }
 
-// function renderMessage() {
-//     if (winner === ) {
-//         statusMessage.innerText = "You successfully marked each mine! You win!";
-//     } else if (markerBank <= 10) {
-//         statusMessage.innerText = "10 mines to mark. No time to waste!";
-//     } else if (markerBank < 7) {
-//         statusMessage.innerText = "Great start! You still have some work to do though.";
-//     } else if (markerBank < 5) {
-//         statusMessage.innerText = "Halfway there! Keep up the good work!";
-//     } else if (markerBank < 3) {
-//         statusMessage.innerText = "You're so close! Time to finish strong!";
-//     }
-// }
+function renderMessage() {
+    if (markers <= 10) {
+        statusMessage.innerText = "10 mines to mark. No time to waste!";
+    } else if (markers <= 7) {
+        statusMessage.innerText = "Great start! You still have some work to do though.";
+    } else if (markers <= 5) {
+        statusMessage.innerText = "Halfway there! Keep up the good work!";
+    } else if (markers <= 3) {
+        statusMessage.innerText = "You're so close! Time to finish strong!";
+    // } else if (winner === ) {
+    //     statusMessage.innerText = "You successfully marked each mine! You win!";
+    }
+}

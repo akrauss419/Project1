@@ -62,8 +62,8 @@ function init() {
     mines = 10;
     markers = 10;
     timer = 0;
-    win = null;
-    loss = null;
+    win = false;
+    loss = false;
     for (let r = 0; r < rows; r++) {
         for (let c = 0; c < columns; c++) {
             let cell = {isMine: false, adjMineCount: 0, revealed: false, click: false, markerStatus: false,};
@@ -72,9 +72,9 @@ function init() {
     };
     setMinefield();
     setAdjacentMineCount();
+    gameClock();
     render();
 }
-
 
 function handleLeftClick(evt) {
     if ( evt.target.tagName !== 'DIV') return;
@@ -82,13 +82,11 @@ function handleLeftClick(evt) {
     let rowIdx = parseInt(evt.target.id[3]);
     const square = minefield[colIdx][rowIdx];
     square.click = true;
-    // if (square.isMine = false) {
-        // reveal blank squares and/or adjMineCount
-    // } else {
-        // isMine = true and the game is over. Player loses
-    // };
-    // winner = checkWinner();
-    // checkAdjacentMines();
+    if (square.click === true && square.isMine === true) {
+        loss = true;
+        renderMessage();
+        revealMines();
+    }
     floodSquares(colIdx, rowIdx);
     checkWin();
     render();
@@ -116,20 +114,19 @@ function handleRightClick(evt) {
 }
 
 function checkWin() {
+    let mineCount = 0;
     minefield.forEach(function(colArr, colIdx) {
         colArr.forEach(function(cell, rowIdx) {
             const cellId = `c${colIdx}r${rowIdx}`;
-            if ([minefield[colIdx][rowIdx].isMine === true && minefield[colIdx][rowIdx].markerStatus === true] * 10) {
-                winner = true;
-            } else {
-                return null;
-            }
-            if (minefield[colIdx][rowIdx].isMine === true && minefield[colIdx][rowIdx].click === true) {
-                winner = false;
+            if (minefield[colIdx][rowIdx].isMine === true && minefield[colIdx][rowIdx].markerStatus === true) {
+                mineCount++;
             }
         });
-    });    
-}
+    });
+    if (mineCount === 10) {
+        win = true;
+    }
+ }    
 
 function setMinefield() {
     let minesRemaining = mines;
@@ -142,6 +139,19 @@ function setMinefield() {
         }
     }
 }
+
+function revealMines() {
+    minefield.forEach(function(colArr, colIdx) {
+        colArr.forEach(function(cell, rowIdx) {
+            const cellId = `c${colIdx}r${rowIdx}`;
+            if (minefield[colIdx][rowIdx].isMine === true) {
+                document.getElementById(cellId).style.backgroundColor = 'red';
+                document.getElementById(cellId).style.outline = '0.5vmin solid black';
+            }
+        });
+    });
+}
+        
 
 function checkAdjacentMines(colIdx, rowIdx) {
     if (rowIdx < 0 || rowIdx > (rows - 1) || colIdx < 0 || colIdx > (columns - 1)) {
@@ -220,18 +230,20 @@ function setAdjacentMineCount() {
     }
 };
 
-setInterval(function() {
-    timer += 1;
-    if (timer < 10) {
-        gameTimer.innerText = `00${timer}`;
-    } else if (timer < 100) {
-        gameTimer.innerText = `0${timer}`;
-    } else {
-        gameTimer.innerText = timer;
-    }
-    gameTimer.style.color = 'red';
-    gameTimer.style.fontSize = '28px';
-}, 1000);
+function gameClock() {
+    setInterval(function() {
+        timer += 1;
+        if (timer < 10) {
+            gameTimer.innerText = `00${timer}`;
+        } else if (timer < 100) {
+            gameTimer.innerText = `0${timer}`;
+        } else {
+            gameTimer.innerText = timer;
+        }
+        gameTimer.style.color = 'red';
+        gameTimer.style.fontSize = '28px';
+    }, 1000);
+}
 
 
 function render() {
@@ -243,11 +255,11 @@ function renderMinefield() {
     minefield.forEach(function(colArr, colIdx) {
         colArr.forEach(function(cell, rowIdx) {
             const cellId = `c${colIdx}r${rowIdx}`;
-            if (minefield[colIdx][rowIdx].isMine === true) {
-                document.getElementById(cellId).style.backgroundColor = 'red';
-            } else {
-                document.getElementById(cellId).style.backgroundColor = 'lightgrey';
-            }
+            // if (minefield[colIdx][rowIdx].isMine === true) {
+            //     document.getElementById(cellId).style.backgroundColor = 'red';
+            // } else {
+            //     document.getElementById(cellId).style.backgroundColor = 'lightgrey';
+            // }
             if (minefield[colIdx][rowIdx].markerStatus === true) {
                 document.getElementById(cellId).style.backgroundColor = 'purple';
             }
@@ -272,7 +284,9 @@ function renderMessage() {
         statusMessage.innerText = "Halfway there! Keep up the good work!";
     } else if (markers <= 3) {
         statusMessage.innerText = "You're so close! Time to finish strong!";
-    } else if (winner === true) {
+    } else if (win = true) {
         statusMessage.innerText = "You successfully marked each mine! You win! Just keep swimming!";
+    } else if (loss = true) {
+        statusMessage.innerText = "You detonated a mine! Sorry, you lose.";
     }
 }

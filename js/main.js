@@ -95,13 +95,19 @@ function handleLeftClick(evt) {
 function handleRightClick(evt) {
     evt.preventDefault();
     if ( evt.target.tagName !== 'DIV') return;
-    const square = minefield[parseInt(evt.target.id[1])][parseInt(evt.target.id[3])];
-    square.markerStatus = true;
-    let numOfMarkers = markers;
-    numOfMarkers--;
-    markerBank.innerText = numOfMarkers;
+    let colIdx = parseInt(evt.target.id[1]);
+    let rowIdx = parseInt(evt.target.id[3]);
+    const square = minefield[colIdx][rowIdx];
+    if (square.markerStatus === false) {
+        square.markerStatus = true;
+        markers--;
+    } else if (square.markerStatus === true) {
+        square.markerStatus = false;
+        markers++;
+    }
+    markerBank.innerText = markers;
     markerBank.style.color = 'red';
-    if (numOfMarkers < 0) return;
+    if (markers < 0) return;
     // winner = checkWinner();
     render();
 }
@@ -167,7 +173,7 @@ function floodSquares(colIdx, rowIdx) {
             let neighborColIdx = parseInt(neighborIdArr[1]);
             let neighborRowIdx = parseInt(neighborIdArr[3]);
             let neighborCell = minefield[neighborColIdx][neighborRowIdx];
-            if (neighborCell.isMine === false) {
+            if (neighborCell.isMine === false && neighborCell.markerStatus === false) {
                 if (neighborCell.adjMineCount === 0 && neighborCell.click === false) {
                     neighborCell.click = true;
                     floodSquares(neighborColIdx, neighborRowIdx);

@@ -153,7 +153,6 @@ function revealMines() {
     });
 }
         
-
 function checkAdjacentMines(colIdx, rowIdx) {
     console.log('dog');
     if (rowIdx < 0 || rowIdx > (rows - 1) || colIdx < 0 || colIdx > (columns - 1)) {
@@ -246,7 +245,6 @@ function gameClock() {
     }, 1000);
 }
 
-
 function render() {
     renderMinefield();
     renderMessage();
@@ -291,7 +289,8 @@ function renderMessage() {
         statusMessage.innerHTML = "Halfway there! Keep up the good work!";
     } else if (markers >= 3) {
         statusMessage.innerHTML = "You're so close! Time to finish strong!";
-    } else if (win === true) {
+    }
+    if (win === true) {
         statusMessage.innerHTML = "You successfully marked each mine! You win! Just keep swimming!";
     } else if (loss === true) {
         statusMessage.innerHTML = "You detonated a mine! Sorry, you lose.";

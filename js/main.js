@@ -90,9 +90,6 @@ function handleLeftClick(evt) {
     let rowIdx = parseInt(evt.target.id[3]);
     const square = minefield[colIdx][rowIdx];
     square.click = true;
-    if (square.click === true && square.isMine === true) {
-        loss = true;
-    }
     floodSquares(colIdx, rowIdx);
     checkWin();
     render();
@@ -123,12 +120,15 @@ function checkWin() {
             if (minefield[colIdx][rowIdx].isMine === true && minefield[colIdx][rowIdx].markerStatus === true) {
                 mineCount++;
             }
+            if (minefield[colIdx][rowIdx].click === true && minefield[colIdx][rowIdx].isMine === true) {
+                loss = true;
+            }
         });
     });
     if (mineCount === 10) {
         win = true;
     }
- }    
+}  
 
 function setMinefield() {
     let minesRemaining = mines;
@@ -148,13 +148,13 @@ function revealMines() {
             const cellId = `c${colIdx}r${rowIdx}`;
             if (minefield[colIdx][rowIdx].isMine === true) {
                 document.getElementById(cellId).style.backgroundColor = 'red';
+                document.getElementById(cellId).style.backgroundImage = "url('https://i.imgur.com/1k3lHkX_d.jpg?maxwidth=520&shape=thumb&fidelity=high&v=2')";
             }
         });
     });
 }
         
 function checkAdjacentMines(colIdx, rowIdx) {
-    console.log('dog');
     if (rowIdx < 0 || rowIdx > (rows - 1) || colIdx < 0 || colIdx > (columns - 1)) {
         return;
     }
@@ -231,7 +231,7 @@ function setAdjacentMineCount() {
 };
 
 function gameClock() {
-    setInterval(function() {
+    let scoreClock = setInterval(function() {
         timer += 1;
         if (timer < 10) {
             gameTimer.innerText = `00${timer}`;
@@ -258,16 +258,18 @@ function renderMinefield() {
             if (minefield[colIdx][rowIdx].click === false) document.getElementById(cellId).innerHTML = '';
             if (minefield[colIdx][rowIdx].isMine === true) {
                 document.getElementById(cellId).style.backgroundColor = 'lightgrey';
+                document.getElementById(cellId).style.backgroundImage = '';
             } else {
                 document.getElementById(cellId).style.backgroundColor = 'lightgrey';
+                document.getElementById(cellId).style.backgroundImage = '';
             }
             if (minefield[colIdx][rowIdx].markerStatus === true) {
-                document.getElementById(cellId).style.backgroundColor = 'purple';
+                document.getElementById(cellId).style.backgroundImage = "url('https://i.imgur.com/WMmQeqg_d.jpg?maxwidth=520&shape=thumb&fidelity=high&v=3')";
             }
             if (minefield[colIdx][rowIdx].click === true) {
                 document.getElementById(cellId).style.backgroundColor = 'darkgrey';
             }
-            if (minefield[colIdx][rowIdx].adjMineCount !== 0 && minefield[colIdx][rowIdx].click === true) {
+            if (minefield[colIdx][rowIdx].adjMineCount !== 0 && minefield[colIdx][rowIdx].click === true && minefield[colIdx][rowIdx].isMine === false) {
                 document.getElementById(cellId).innerHTML = minefield[colIdx][rowIdx].adjMineCount;
                 document.getElementById(cellId).style.fontSize = '4vmin';
                 document.getElementById(cellId).style.textAlign = 'center';

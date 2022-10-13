@@ -16,9 +16,8 @@ const NUMBER_HINTS = {
 };
 
 const columns = 10;
-
 const rows = 10;
-
+const mineExplosion = new Audio('https://freesound.org/people/Robinhood76/sounds/565947/');
 
 /*-------- state variables --------*/
 let minefield;
@@ -42,6 +41,9 @@ const minefieldCells = [...document.querySelectorAll('#minefield > div')];
 document.getElementById('minefield').addEventListener('click', handleLeftClick);
 document.getElementById('minefield').addEventListener('contextmenu', handleRightClick);
 resetBtn.addEventListener('click', init);
+mineExplosion.addEventListener("canplaythrough", revealMines => {
+    mineExplosion.play();
+});
 
 
 /*-------- functions --------*/
@@ -85,7 +87,7 @@ function init() {
 }
 
 function handleLeftClick(evt) {
-    if ( evt.target.tagName !== 'DIV') return;
+    if ( evt.target.tagName !== 'DIV' || win === true || loss === true) return;
     let colIdx = parseInt(evt.target.id[1]);
     let rowIdx = parseInt(evt.target.id[3]);
     const square = minefield[colIdx][rowIdx];
@@ -97,7 +99,7 @@ function handleLeftClick(evt) {
 
 function handleRightClick(evt) {
     evt.preventDefault();
-    if ( evt.target.tagName !== 'DIV') return;
+    if ( evt.target.tagName !== 'DIV' || win === true || loss === true) return;
     let colIdx = parseInt(evt.target.id[1]);
     let rowIdx = parseInt(evt.target.id[3]);
     const square = minefield[colIdx][rowIdx];
@@ -122,17 +124,11 @@ function checkWin() {
             }
             if (minefield[colIdx][rowIdx].click === true && minefield[colIdx][rowIdx].isMine === true) {
                 loss = true;
-                document.getElementById('minefield').removeEventListener('click', handleLeftClick);
-                document.getElementById('minefield').removeEventListener('contextmenu', handleRightClick);
-                stopTimer();
             }
         });
     });
     if (mineCount === 10) {
         win = true;
-        document.getElementById('minefield').removeEventListener('click', handleLeftClick);
-        document.getElementById('minefield').removeEventListener('contextmenu', handleRightClick);
-        stopTimer();
     }
 }  
 
@@ -154,7 +150,7 @@ function revealMines() {
             const cellId = `c${colIdx}r${rowIdx}`;
             if (minefield[colIdx][rowIdx].isMine === true) {
                 document.getElementById(cellId).style.backgroundColor = 'red';
-                document.getElementById(cellId).style.backgroundImage = "url('https://i.imgur.com/1k3lHkX_d.jpg?maxwidth=520&shape=thumb&fidelity=high&v=3')";
+                document.getElementById(cellId).style.backgroundImage = "url('https://i.imgur.com/T0s6vWz_d.jpg?maxwidth=520&shape=thumb&fidelity=high&v=1')";
             }
         });
     });
@@ -223,7 +219,7 @@ function checkSquare(colIdx, rowIdx) {
         return 0;
     }
     if (minefield[colIdx][rowIdx].isMine == true) {
-         count++;
+        count++;
     }
     return count;
 }
@@ -237,7 +233,7 @@ function setAdjacentMineCount() {
 };
 
 function gameClock() {
-    timer = setInterval(function() {
+    let time = setInterval(function() {
         timer += 1;
         if (timer < 10) {
             gameTimer.innerText = `00${timer}`;
@@ -248,12 +244,10 @@ function gameClock() {
         }
         gameTimer.style.color = 'red';
         gameTimer.style.fontSize = '28px';
+        if (win === true || loss === true) {
+            clearInterval(time);
+        }
     }, 1000);
-}
-
-function stopTimer() {
-    clearInterval(timer);
-    timer = null;
 }
 
 function render() {

@@ -122,11 +122,17 @@ function checkWin() {
             }
             if (minefield[colIdx][rowIdx].click === true && minefield[colIdx][rowIdx].isMine === true) {
                 loss = true;
+                document.getElementById('minefield').removeEventListener('click', handleLeftClick);
+                document.getElementById('minefield').removeEventListener('contextmenu', handleRightClick);
+                stopTimer();
             }
         });
     });
     if (mineCount === 10) {
         win = true;
+        document.getElementById('minefield').removeEventListener('click', handleLeftClick);
+        document.getElementById('minefield').removeEventListener('contextmenu', handleRightClick);
+        stopTimer();
     }
 }  
 
@@ -148,7 +154,7 @@ function revealMines() {
             const cellId = `c${colIdx}r${rowIdx}`;
             if (minefield[colIdx][rowIdx].isMine === true) {
                 document.getElementById(cellId).style.backgroundColor = 'red';
-                document.getElementById(cellId).style.backgroundImage = "url('https://i.imgur.com/1k3lHkX_d.jpg?maxwidth=520&shape=thumb&fidelity=high&v=2')";
+                document.getElementById(cellId).style.backgroundImage = "url('https://i.imgur.com/1k3lHkX_d.jpg?maxwidth=520&shape=thumb&fidelity=high&v=3')";
             }
         });
     });
@@ -231,7 +237,7 @@ function setAdjacentMineCount() {
 };
 
 function gameClock() {
-    let scoreClock = setInterval(function() {
+    timer = setInterval(function() {
         timer += 1;
         if (timer < 10) {
             gameTimer.innerText = `00${timer}`;
@@ -243,6 +249,11 @@ function gameClock() {
         gameTimer.style.color = 'red';
         gameTimer.style.fontSize = '28px';
     }, 1000);
+}
+
+function stopTimer() {
+    clearInterval(timer);
+    timer = null;
 }
 
 function render() {
@@ -264,7 +275,7 @@ function renderMinefield() {
                 document.getElementById(cellId).style.backgroundImage = '';
             }
             if (minefield[colIdx][rowIdx].markerStatus === true) {
-                document.getElementById(cellId).style.backgroundImage = "url('https://i.imgur.com/WMmQeqg_d.jpg?maxwidth=520&shape=thumb&fidelity=high&v=3')";
+                document.getElementById(cellId).style.backgroundImage = "url('https://i.imgur.com/WMmQeqg_d.jpg?maxwidth=520&shape=thumb&fidelity=high&v=5')";
             }
             if (minefield[colIdx][rowIdx].click === true) {
                 document.getElementById(cellId).style.backgroundColor = 'darkgrey';
@@ -285,11 +296,11 @@ function renderMinefield() {
 function renderMessage() {
     if (markers === 10) {
         statusMessage.innerHTML = "10 mines to mark. No time to waste!";
-    } else if (markers >= 7) {
+    } else if (markers >= 6) {
         statusMessage.innerHTML = "Great start! You still have some work to do though.";
-    } else if (markers >= 5) {
-        statusMessage.innerHTML = "Halfway there! Keep up the good work!";
     } else if (markers >= 3) {
+        statusMessage.innerHTML = "Halfway there! Keep up the good work!";
+    } else if (markers >= 0) {
         statusMessage.innerHTML = "You're so close! Time to finish strong!";
     }
     if (win === true) {

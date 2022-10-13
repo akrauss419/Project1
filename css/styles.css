@@ -16,16 +16,16 @@ body {
 
 h1 {
     font-family: 'Gemunu Libre', sans-serif;
-    font-size: 80px;
+    font-size: 90px;
     color: white;
     margin-top: 5vmin;
     margin-bottom: 0;
 }
 
 h2 {
-    margin: 0;
+    margin: 2vmin 0;
     font-family: 'Gemunu Libre', sans-serif;
-    font-size: 40px;
+    font-size: 50px;
     color: white;
 }
 
@@ -78,5 +78,5 @@ main > div {
 }
 
 main > div:hover {
-    outline: 0.8vmin solid black;
+    cursor: pointer;
 }

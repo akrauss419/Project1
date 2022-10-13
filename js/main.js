@@ -1,9 +1,4 @@
 /* -------- constants -------- */
-const GAME_PIECES = {
-    mine: "url('https://w7.pngwing.com/pngs/617/771/png-transparent-microsoft-minesweeper-the-minesweeper-puzzle-video-game-mines-game-computer-wallpaper-symmetry.png')",
-    marker: "url('https://inotgo.com/imagesLocal/202108/03/20210803020506364t_4.png')",
-}
-
 const NUMBER_HINTS = {
     1: 'blue',
     2: 'green',
@@ -71,12 +66,6 @@ function init() {
         });
         return newArr;
     })
-    // for (let r = 0; r < rows; r++) {
-    //     for (let c = 0; c < columns; c++) {
-    //         let cell = {isMine: false, adjMineCount: 0, revealed: false, click: false, markerStatus: false,};
-    //         minefield[r][c] = cell;
-    //     }
-    // };
     setMinefield();
     setAdjacentMineCount();
     gameClock();
@@ -146,7 +135,6 @@ function revealMines() {
         colArr.forEach(function(cell, rowIdx) {
             const cellId = `c${colIdx}r${rowIdx}`;
             if (minefield[colIdx][rowIdx].isMine === true) {
-                // document.getElementById(cellId).style.backgroundColor = 'red';
                 document.getElementById(cellId).style.backgroundImage = "url('https://i.imgur.com/B7Jcjw8_d.jpg?maxwidth=520&shape=thumb&fidelity=high&v=1')";
                 document.getElementById(cellId).style.backgroundSize = 'cover';
                 mineExplosion.play();
@@ -163,7 +151,6 @@ function checkAdjacentMines(colIdx, rowIdx) {
         return;
     }
     minefield[colIdx][rowIdx].click === true;
-    // squaresClicked += 1;
     let minesFound = 0;
     minesFound += checkSquare(colIdx - 1, rowIdx - 1);
     minesFound += checkSquare(colIdx - 1, rowIdx);
@@ -282,6 +269,7 @@ function renderMinefield() {
                 document.getElementById(cellId).innerHTML = minefield[colIdx][rowIdx].adjMineCount;
                 document.getElementById(cellId).style.fontSize = '4vmin';
                 document.getElementById(cellId).style.textAlign = 'center';
+                document.getElementById(cellId).style.color = `${NUMBER_HINTS[minefield[colIdx][rowIdx].adjMineCount]}`;
             }
         });
     });

@@ -23,10 +23,11 @@ h1 {
 }
 
 h2 {
-    margin: 2vmin 0;
     font-family: 'Gemunu Libre', sans-serif;
-    font-size: 5vmin;
+    font-size: 6vmin;
     color: white;
+    margin-top: 2vmin;
+    margin-bottom: 4vmin;
 }
 
 section {
@@ -72,10 +73,10 @@ main {
     margin-bottom: 12vmin;
 }
 
-main > div {
-    outline: 0.3vmin solid black;
+main:hover {
+    cursor: pointer;
 }
 
-main > div:hover {
-    cursor: pointer;
+main > div {
+    outline: 0.3vmin solid black;
 }

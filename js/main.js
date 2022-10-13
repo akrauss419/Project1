@@ -41,9 +41,6 @@ const minefieldCells = [...document.querySelectorAll('#minefield > div')];
 document.getElementById('minefield').addEventListener('click', handleLeftClick);
 document.getElementById('minefield').addEventListener('contextmenu', handleRightClick);
 resetBtn.addEventListener('click', init);
-// mineExplosion.addEventListener("canplaythrough", revealMines => {
-//     mineExplosion.play();
-// });
 
 
 /*-------- functions --------*/
@@ -247,6 +244,10 @@ function gameClock() {
         gameTimer.style.color = 'red';
         gameTimer.style.fontSize = '4vmin';
         if (win === true || loss === true) {
+            clearInterval(time);
+        }
+        let reset = resetBtn;
+            reset.onclick = function() {
             clearInterval(time);
         }
     }, 1000);

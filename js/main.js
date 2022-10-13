@@ -298,8 +298,10 @@ function renderMessage() {
         statusMessage.innerHTML = "Great start! You still have some work to do though.";
     } else if (markers >= 3) {
         statusMessage.innerHTML = "Halfway there! Keep up the good work!";
-    } else if (markers >= 0) {
+    } else if (markers >= 1) {
         statusMessage.innerHTML = "You're so close! Time to finish strong!";
+    } else if (markers === 0 && win === false) {
+        statusMessage.innerHTML = "Uh-oh... looks like some mines are incorrectly marked. Go back and check!";
     }
     if (win === true) {
         statusMessage.innerHTML = "You successfully marked each mine! You win! Just keep swimming!";

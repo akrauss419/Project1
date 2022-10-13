@@ -17,7 +17,7 @@ const NUMBER_HINTS = {
 
 const columns = 10;
 const rows = 10;
-const mineExplosion = new Audio('https://freesound.org/people/Robinhood76/sounds/565947/');
+const mineExplosion = new Audio('sound/565947__robinhood76__10091-water-bomb-exploding.wav');
 
 /*-------- state variables --------*/
 let minefield;
@@ -41,9 +41,9 @@ const minefieldCells = [...document.querySelectorAll('#minefield > div')];
 document.getElementById('minefield').addEventListener('click', handleLeftClick);
 document.getElementById('minefield').addEventListener('contextmenu', handleRightClick);
 resetBtn.addEventListener('click', init);
-mineExplosion.addEventListener("canplaythrough", revealMines => {
-    mineExplosion.play();
-});
+// mineExplosion.addEventListener("canplaythrough", revealMines => {
+//     mineExplosion.play();
+// });
 
 
 /*-------- functions --------*/
@@ -149,11 +149,13 @@ function revealMines() {
         colArr.forEach(function(cell, rowIdx) {
             const cellId = `c${colIdx}r${rowIdx}`;
             if (minefield[colIdx][rowIdx].isMine === true) {
-                document.getElementById(cellId).style.backgroundColor = 'red';
-                document.getElementById(cellId).style.backgroundImage = "url('https://i.imgur.com/T0s6vWz_d.jpg?maxwidth=520&shape=thumb&fidelity=high&v=1')";
+                // document.getElementById(cellId).style.backgroundColor = 'red';
+                document.getElementById(cellId).style.backgroundImage = "url('https://i.imgur.com/B7Jcjw8_d.jpg?maxwidth=520&shape=thumb&fidelity=high&v=1')";
+                document.getElementById(cellId).style.backgroundSize = 'cover';
+                mineExplosion.play();
             }
         });
-    });
+    }); 
 }
         
 function checkAdjacentMines(colIdx, rowIdx) {
@@ -243,7 +245,7 @@ function gameClock() {
             gameTimer.innerText = timer;
         }
         gameTimer.style.color = 'red';
-        gameTimer.style.fontSize = '28px';
+        gameTimer.style.fontSize = '4vmin';
         if (win === true || loss === true) {
             clearInterval(time);
         }
@@ -269,7 +271,8 @@ function renderMinefield() {
                 document.getElementById(cellId).style.backgroundImage = '';
             }
             if (minefield[colIdx][rowIdx].markerStatus === true) {
-                document.getElementById(cellId).style.backgroundImage = "url('https://i.imgur.com/WMmQeqg_d.jpg?maxwidth=520&shape=thumb&fidelity=high&v=5')";
+                document.getElementById(cellId).style.backgroundImage = "url('https://i.imgur.com/TjzrOw7_d.jpg?maxwidth=520&shape=thumb&fidelity=high')";
+                document.getElementById(cellId).style.backgroundSize = 'cover';
             }
             if (minefield[colIdx][rowIdx].click === true) {
                 document.getElementById(cellId).style.backgroundColor = 'darkgrey';
@@ -283,7 +286,7 @@ function renderMinefield() {
     });
     markerBank.innerText = markers;
     markerBank.style.color = 'red';
-    markerBank.style.fontSize = '28px';
+    markerBank.style.fontSize = '4vmin';
     if (markers < 0) return;
 }
 

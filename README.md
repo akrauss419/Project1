@@ -8,10 +8,10 @@ The theme of this version of the game is inspired by the Pixar film Finding Nemo
 
 # Screenshots
 
-https://imgur.com/a/DMv3bLR
-https://imgur.com/a/b42tmH1
-https://imgur.com/a/xW201wK
-https://imgur.com/a/bSSg8lu
+<img src= "https://imgur.com/a/DMv3bLR">
+<img src= "https://imgur.com/a/b42tmH1">
+<img src= "https://imgur.com/a/xW201wK">
+<img src= "https://imgur.com/a/bSSg8lu">
 
 # Technologies Used
 

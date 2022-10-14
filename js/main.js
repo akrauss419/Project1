@@ -78,6 +78,7 @@ function handleLeftClick(evt) {
     let rowIdx = parseInt(evt.target.id[3]);
     const square = minefield[colIdx][rowIdx];
     square.click = true;
+    if (square.click === true && square.isMine === true && square.markerStatus === true) return;
     floodSquares(colIdx, rowIdx);
     checkWin();
     render();
@@ -89,6 +90,7 @@ function handleRightClick(evt) {
     let colIdx = parseInt(evt.target.id[1]);
     let rowIdx = parseInt(evt.target.id[3]);
     const square = minefield[colIdx][rowIdx];
+    if (square.click === true) return;
     if (square.markerStatus === false) {
         square.markerStatus = true;
         markers--;
@@ -108,7 +110,7 @@ function checkWin() {
             if (minefield[colIdx][rowIdx].isMine === true && minefield[colIdx][rowIdx].markerStatus === true) {
                 mineCount++;
             }
-            if (minefield[colIdx][rowIdx].click === true && minefield[colIdx][rowIdx].isMine === true) {
+            if (minefield[colIdx][rowIdx].click === true && minefield[colIdx][rowIdx].isMine === true && minefield[colIdx][rowIdx].markerStatus === false) {
                 loss = true;
             }
         });

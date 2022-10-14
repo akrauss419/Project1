@@ -1,4 +1,7 @@
 /* -------- constants -------- */
+const columns = 10;
+const rows = 10;
+const mineExplosion = new Audio('sound/565947__robinhood76__10091-water-bomb-exploding.wav');
 const NUMBER_HINTS = {
     1: 'blue',
     2: 'green',
@@ -10,9 +13,6 @@ const NUMBER_HINTS = {
     8: 'white',
 };
 
-const columns = 10;
-const rows = 10;
-const mineExplosion = new Audio('sound/565947__robinhood76__10091-water-bomb-exploding.wav');
 
 /*-------- state variables --------*/
 let minefield;
@@ -29,7 +29,6 @@ const markerBank = document.getElementById('marker-bank');
 const statusMessage = document.getElementById('message');
 const resetBtn = document.querySelector('button');
 const gameTimer = document.getElementById('timer');
-const minefieldCells = [...document.querySelectorAll('#minefield > div')];
 
 
 /*-------- event listeners --------*/
@@ -61,7 +60,7 @@ function init() {
     loss = false;
     minefield = minefield.map(function(array) {
         let newArr = array.map(function(ele) {
-            let newEl = {isMine: false, adjMineCount: 0, revealed: false, click: false, markerStatus: false,};
+            let newEl = {isMine: false, adjMineCount: 0, click: false, markerStatus: false,};
             return newEl;
         });
         return newArr;
